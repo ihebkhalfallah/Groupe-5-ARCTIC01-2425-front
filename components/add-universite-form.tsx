@@ -36,9 +36,11 @@ export function AddUniversiteForm() {
         adresse: (form.elements.namedItem("adresse") as HTMLInputElement).value,
       };
 
+      const universiteBaseUrl =
+        process.env.NEXT_PUBLIC_UNIVERSITE_BASE_URL || "http://localhost:8086";
+
       const response = await fetch(
-        process.env.NEXT_PUBLIC_UNIVERSITE_API_URL ||
-          "http://localhost:8086/Foyer/universite/addOrUpdate",
+        `${universiteBaseUrl}/Foyer/universite/addOrUpdate`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -1,17 +1,13 @@
 import type { Student } from "./types";
 
-const BASE_URL =
-  typeof window !== "undefined"
-    ? window.location.origin
-    : "http://localhost:3000";
-const API_URL = `${BASE_URL}/api/students`;
+// Simple environment variable configuration
+const UNIVERSITE_BASE_URL =
+  process.env.NEXT_PUBLIC_UNIVERSITE_BASE_URL || "http://localhost:8086";
 
 export async function getUniversites() {
-  const res = await fetch(
-    process.env.NEXT_PUBLIC_UNIVERSITE_FINDALL_API_URL ||
-      "http://localhost:8086/Foyer/universite/findAll",
-    { cache: "no-store" }
-  );
+  const res = await fetch(`${UNIVERSITE_BASE_URL}/Foyer/universite/findAll`, {
+    cache: "no-store",
+  });
   if (!res.ok) {
     throw new Error("Failed to fetch universites");
   }
@@ -21,11 +17,7 @@ export async function getUniversites() {
 // Delete a universite by ID
 export async function deleteUniversite(idUniversite: number) {
   const res = await fetch(
-    (process.env.NEXT_PUBLIC_UNIVERSITE_API_URL?.replace(
-      "addOrUpdate",
-      "deleteById"
-    ) || "http://localhost:8086/Foyer/universite/deleteById") +
-      `?id=${idUniversite}`,
+    `${UNIVERSITE_BASE_URL}/Foyer/universite/deleteById?id=${idUniversite}`,
     {
       method: "DELETE",
     }
@@ -44,8 +36,7 @@ export async function updateUniversite(universite: {
   // add other fields if needed
 }) {
   const res = await fetch(
-    process.env.NEXT_PUBLIC_UNIVERSITE_API_URL ||
-      "http://localhost:8086/Foyer/universite/addOrUpdate",
+    `${UNIVERSITE_BASE_URL}/Foyer/universite/addOrUpdate`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

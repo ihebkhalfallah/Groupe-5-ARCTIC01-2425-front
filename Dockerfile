@@ -9,6 +9,15 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Accept build arguments for environment variables
+ARG NEXT_PUBLIC_UNIVERSITE_BASE_URL
+ARG NEXT_PUBLIC_API_BASE_URL
+
+# Set environment variables for the build
+ENV NEXT_PUBLIC_UNIVERSITE_BASE_URL=$NEXT_PUBLIC_UNIVERSITE_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+
 RUN npm run build
 
 # Production image, copy all the files and run next
