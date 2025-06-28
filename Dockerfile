@@ -1,13 +1,8 @@
 # Install dependencies only when needed
 FROM node:20-alpine AS deps
 WORKDIR /app
-COPY package.json package-lock.json* pnpm-lock.yaml* yarn.lock* ./
-RUN \
-    if [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm install; \
-    elif [ -f yarn.lock ]; then yarn install; \
-    else npm install; \
-    fi
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM node:20-alpine AS builder
@@ -27,17 +22,6 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-
-# Accept env vars as runtime arguments (not from .env file)
-ARG NEXT_PUBLIC_APP_URL
-ARG NEXT_PUBLIC_UNIVERSITE_API_URL
-ARG NEXT_PUBLIC_STUDENT_API_URL
-ARG NEXT_PUBLIC_API_BASE_URL
-
-ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-ENV NEXT_PUBLIC_UNIVERSITE_API_URL=${NEXT_PUBLIC_UNIVERSITE_API_URL}
-ENV NEXT_PUBLIC_STUDENT_API_URL=${NEXT_PUBLIC_STUDENT_API_URL}
-ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
 
 EXPOSE 3000
 

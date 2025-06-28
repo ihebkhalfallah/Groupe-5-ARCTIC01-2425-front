@@ -7,9 +7,11 @@ const BASE_URL =
 const API_URL = `${BASE_URL}/api/students`;
 
 export async function getUniversites() {
-  const res = await fetch("http://localhost:8086/Foyer/universite/findAll", {
-    cache: "no-store",
-  });
+  const res = await fetch(
+    process.env.NEXT_PUBLIC_UNIVERSITE_FINDALL_API_URL ||
+      "http://localhost:8086/Foyer/universite/findAll",
+    { cache: "no-store" }
+  );
   if (!res.ok) {
     throw new Error("Failed to fetch universites");
   }
